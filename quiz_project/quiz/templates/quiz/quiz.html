@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ quiz.name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1>{{ quiz.name }}</h1>
+        <p>{{ quiz.description }}</p>
+    </header>
+
+    <main>
+        {% if questions %}
+            <form method="post">
+                {% csrf_token %}
+                {% for question in questions %}
+                    <div class="mb-4">
+                        <h3>{{ question.text }}</h3>
+                        <div class="form-check">
+                            {% for answer in question.answers.all %}
+                                <label class="form-check-label">
+                                    <input type="checkbox" name="{{ question.id }}" value="{{ answer.id }}" class="form-check-input">
+                                    {{ answer.text }}
+                                </label><br>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        {% else %}
+            <p>No questions available.</p>
+        {% endif %}
+    </main>
+
+    <footer class="text-center mt-4">
+        <p>&copy; {{ current_year }} Quiz Platform</p>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

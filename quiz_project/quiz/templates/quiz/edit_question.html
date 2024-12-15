@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Question</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>Edit Question for Quiz: "{{ question.quiz.name }}"</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="text" class="form-label">Question Text:</label>
+            <input type="text" name="text" value="{{ question.text }}" id="text" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Save Question</button>
+    </form>
+
+    <hr>
+
+    <h2>Answers for "{{ question.text }}"</h2>
+    <ul class="list-group">
+        {% for answer in question.answers.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ answer.text }} {% if answer.is_correct %} <span class="badge bg-success">Correct</span> {% endif %}
+                <div>
+                    <a href="{% url 'edit_answer' answer.id %}" class="btn btn-warning btn-sm mx-1">Edit</a>
+                    <a href="{% url 'delete_answer' answer.id %}" class="btn btn-danger btn-sm mx-1">Delete</a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <!-- Add New Answer Form -->
+    <h3>Add a New Answer</h3>
+    <form method="POST" action="{% url 'add_answer' question.id %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="answer_text" class="form-label">Answer Text:</label>
+            <input type="text" name="text" id="answer_text" class="form-control">
+        </div>
+        <div class="form-check mb-3">
+            <input type="checkbox" name="is_correct" id="is_correct" class="form-check-input">
+            <label class="form-check-label" for="is_correct">Correct Answer</label>
+        </div>
+        <button type="submit" class="btn btn-success">Add Answer</button>
+    </form>
+
+    <hr>
+
+    <a href="{% url 'manage_questions' question.quiz.id %}" class="btn btn-secondary">Back to Questions</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
